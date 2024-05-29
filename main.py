@@ -95,6 +95,79 @@ def simulated_annealing(board):
                 curr_state = next_state
                 
         i += 1
+
+def create_random_population(n):
+    population = []
+    
+    for i in range(n):
+        population.append(create_random_board())
+
+    return population
+
+def get_weights(population):
+    weights = []
+
+    for individual in population:
+        weights.append(1 / (1 + heuristic_function(individual)))
+
+    return weights
+
+def short_enough_fitness(population):
+    for individual in population:
+        if (heuristic_function(individual) == 0):
+            return True
+
+    return False
+
+def best_fitness_individual(population):
+    h_min = 28
+    pos_min = 0
+
+    for i in range(len(population)):
+        h = heuristic_function(population[i])
+        
+        if (h < h_min):
+            h_min = h
+            pos_min = i 
+
+    return population[pos_min]
+    
+
+def weighted_random_selection(population, w):
+    return random.choices(population, weights=w, k=2)
+
+def reproduction(parent1, parent2):
+    c = random.randint(1, 7)
+    return parent1[0:c] + parent2[c:8]
+
+def mutation(child):
+    pos = random.randint(0, 7)
+    val = random.randint(0, 7)
+
+    child[pos] = val
+    return child
+    
+
+def genetic_algorithm(population):
+    for i in range(10000):
+        if short_enough_fitness(population):
+            return best_fitness_individual(population)
+        
+        weights = get_weights(population)
+        population2 = []
+        
+        for j in range(len(population)):
+            parent1, parent2 = weighted_random_selection(population, weights)
+            child = reproduction(parent1, parent2)
+
+            if (random.random() < 0.1):
+                child = mutation(child)
+
+            population2.append(child)
+            
+        population = population2[:]
+
+    return best_fitness_individual(population)
         
 board = create_random_board()
 
@@ -113,4 +186,12 @@ print()
 solution = simulated_annealing(board)
 
 print("Solution with simulated annealing: " + str(solution))
+print("Number of conflicts: " + str(heuristic_function(solution)))
+
+print()
+
+population = create_random_population(4)
+solution = genetic_algorithm(population)
+
+print("Solution with genetic algorithm: " + str(solution))
 print("Number of conflicts: " + str(heuristic_function(solution)))
