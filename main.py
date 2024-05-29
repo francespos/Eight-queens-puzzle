@@ -132,7 +132,6 @@ def best_fitness_individual(population):
 
     return population[pos_min]
     
-
 def weighted_random_selection(population, w):
     return random.choices(population, weights=w, k=2)
 
