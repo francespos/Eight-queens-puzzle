@@ -19,7 +19,6 @@
     
     \begin{frame}
     \frametitle{Introduction}
-    \pause
         \begin{itemize}
             \item Goal: Solve eight queen puzzle using different local search algorithms.
             \pause
@@ -58,7 +57,6 @@
 
     \begin{frame}
     \frametitle{PEAS}
-    \pause
         \begin{itemize}
             \item Performance measure: Number of pairs of queens that attack each other.
             \pause
@@ -72,9 +70,8 @@
 
     \begin{frame}
     \frametitle{State space representation}
-    \pause
         \begin{itemize}
-            \item Since a column must be occupied by a single queen, we will represent states as a list of eight numbers between 1 and 8.
+            \item Since a column must be occupied by a single queen, we will represent states as a list of eight numbers between 0 and 7.
             \pause
             \begin{itemize}
                 \item The element in position i is the row position of the queen on column i.
@@ -102,7 +99,118 @@
     \end{frame}
 
     \begin{frame}
-    \frametitle{Heuristics function: implementation}
-        
+    \frametitle{Heuristic function: implementation}
+    \begin{itemize}
+        \item An heuristic function is the number of pairs of queens that attack each other.
+        \pause 
+        \item This heuristic function is admissible, because it never overestimates the cost of reaching the goal.
+        \pause
+        \begin{itemize}
+            \item To resolve n conflicts, at least n moves are required.
+        \end{itemize}
+        \pause
+        \item The heuristic function is calculated as the number of conflicts on each row and on each diagonal.
+    \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+    \frametitle{Hill climbing: implementation}
+        \begin{itemize}
+            \item Hill climbing search algorithm only stores the current state.
+            \pause
+            \item In each iteration, it moves to the adjacent state with the lowest value.
+            \pause
+            \begin{itemize}
+                \item In other words, it points to the direction of with the steepest descent.
+            \end{itemize}
+            \pause
+            \item Starting from initial state, the heuristic function is assessed for each neighbor, and it is stored if its value is less than current state value.
+            \pause
+            \begin{itemize}
+                \item After an iteration, we get a pair (state, value) for the best neighbor.
+                \pause
+                \item If "value" is equal to current state value, a local minimum has been reached.
+                \pause
+                \item Otherwise, a new iteration starts with the pair (state, value).
+            \end{itemize} 
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+    \frametitle{Hill climbing: Properties}
+     \begin{itemize}
+         \item Complete? \pause No.
+         \pause The algorithm is "greedy", because he chooses a nearby good state without thinking about how he will move forward.
+         \pause
+         \item Time? \pause 
+         \begin{math}O(n).\end{math}
+         \pause The number of neighbors is n-1, corresponding to all positions on the column other than the current one.
+         \pause
+         \item Space? \pause
+         \begin{math}O(1).\end{math}
+         \pause Only two states are stored: the current state, and the neighbor.
+         \pause
+         \item Optimal? \pause No. 
+         \pause For the eight queens quiz, completeness and optimality are the same thing, because the only solutions are the least cost solutions.  
+     \end{itemize}   
+    \end{frame}
+
+    \begin{frame}
+    \frametitle{Simulated annealing: implementation}
+    \begin{itemize}
+        \item Simulated annealing chooses a random move, rather than the best one.
+        \pause
+        \item If the move improves the heuristic value, it will always be choose, otherwise it is accepted with some probability p \begin{math}< 1\end{math}.
+        \pause
+        \item Probability exponentially decreases with the worsening of the heuristic value and the lowering of temperature.
+        \pause
+        \item If temperature decreases slowly, for the Boltzmann distribution propriety, all probability is centered on global maximum with a limit value of 1.
+    \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+    \frametitle{Simulated annealing: Properties}
+     \begin{itemize}
+         \item Complete? \pause No. \pause Simulated annealing uses a probabilistic model. To reach completeness, theoretically,  cooling should be infinitely slow.
+         \pause
+         \item Time? \pause 
+         \begin{math}O(t)\end{math}
+         , where t is the cooling speed.
+         \pause
+         \item Space? \pause
+         \begin{math}O(1).\end{math}
+         \pause
+         \item Optimal? \pause No.
+     \end{itemize}   
+    \end{frame}
+
+    \begin{frame}
+    \frametitle{Genetic algorithm: implementation}
+        \begin{itemize}
+            \item Genetic search algorithms are built on the theory of natural selection: in each generation, the best individual are selected for reproduction.
+            \pause
+            \begin{itemize}
+                \item In each generations, individuals reproduce with a probability that depends on their fitness value.
+            \end{itemize}
+            \pause
+            \item The recombination procedure occurs by randomly selecting a crossover point, at which the parents are divided to form their children.
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+    \frametitle{Genetic algorithm: Properties}
+     \begin{itemize}
+         \item Complete? \pause No.
+         \pause         
+         Genetic algorithms are also based on probabilistic models.
+         \pause
+         \item Time? \pause 
+         \begin{math}O(km)\end{math}, where k is the maximum number of iterations and m is the population size.
+         \pause
+         \item Space? \pause
+         \begin{math}O(m).\end{math}
+         \pause
+         \item Optimal? \pause No.
+     \end{itemize}   
     \end{frame}
 \end{document}
