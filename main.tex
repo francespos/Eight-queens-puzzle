@@ -46,7 +46,7 @@
         \item Rules: A queen can move horizontally, vertically and diagonally within an arbitrary range.
         \pause
             \begin{itemize}
-                \item We will ignore states where queens are in the same row or in the same colon, because they can't belong to the solution.
+                \item We will ignore states where queens are on the same column, because they can't belong to the solution.
             \end{itemize}
         \pause
         \item We will use PEAS approach to describe the problem.
@@ -56,7 +56,7 @@
     \begin{frame}
     \frametitle{PEAS}
         \begin{itemize}
-            \item Performance measure: Number of pairs of queens that attack each other.
+            \item Performance measure: (Opposite of) number of pairs of queens that attack each other.
             \pause
             \item Environment: 8x8 chessboard with eight queens. 
             \pause
@@ -86,12 +86,12 @@
     \begin{frame}
     \frametitle{Adjacent state: implementation}
         \begin{itemize}
-            \item An adjacent state corresponds to a movement of the queen in her column.
+            \item An adjacent state corresponds to a movement of a queen in her column.
             \pause
             \item For each column c (i.e. position in the list), for each row r (i.e. value of an element in that position): 
             \pause
             \begin{itemize}
-                \item if queen in the column c is not in position r, a neighbor is represent by the same list with the new element r in position c.
+                \item if queen in the column c is not in position r, an adjacent state is represent by the same list with the new element r in position c.
             \end{itemize}
         \end{itemize}
     \end{frame}
@@ -119,15 +119,15 @@
             \item In each iteration, it moves to the adjacent state with the lowest value.
             \pause
             \begin{itemize}
-                \item In other words, it points to the direction of with the steepest descent.
+                \item In other words, it points to the direction of the steepest descent.
             \end{itemize}
             \pause
-            \item Starting from initial state, the heuristic function is assessed for each neighbor, and it is stored if its value is less than current state value.
+            \item Starting from initial state, the heuristic function is assessed for each neighbor, and the state with the lowest value is chosen.
             \pause
             \begin{itemize}
                 \item After an iteration, we get a pair (state, value) for the best neighbor.
                 \pause
-                \item If "value" is equal to current state value, a local minimum has been reached.
+                \item If "value" is greater than or equal to current state value, a local minimum has been reached.
                 \pause
                 \item Otherwise, a new iteration starts with the pair (state, value).
             \end{itemize} 
@@ -138,18 +138,15 @@
     \frametitle{Hill climbing: Properties}
      \begin{itemize}
          \item Complete? \pause No.
-         \pause The algorithm is ``greedy", because he chooses a nearby good state without thinking about how he will move forward.
+         \pause The algorithm is ``greedy", because he chooses a nearby good state without considering the further states.
          \pause
          \item Time? \pause 
-         \begin{math}O(n).\end{math}
-         \pause The number of neighbors is n-1, corresponding to all positions on the column other than the current one.
+         \begin{math}O(n^2).\end{math}
+         \pause The number of neighbors of a queen is \begin{math}n-1\end{math}, so the total number of adjacent states is \begin{math}n * (n-1)\end{math}.
          \pause
          \item Space? \pause
          \begin{math}O(1).\end{math}
-         \pause Only two states are stored: the current state, and the neighbor.
-         \pause
-         \item Optimal? \pause No. 
-         \pause For the eight queens quiz, completeness and optimality are the same thing, because the only solutions are the least cost solutions.  
+         \pause Only the current state is stored.
      \end{itemize}   
     \end{frame}
 
@@ -162,7 +159,7 @@
         \pause
         \item Probability exponentially decreases with the worsening of the heuristic value and the lowering of temperature.
         \pause
-        \item If temperature decreases slowly, for the Boltzmann distribution propriety, all probability is centered on global maximum with a limit value of 1.
+        \item If temperature decreases slowly, for the Boltzmann distribution propriety, all probability is centered on global minimum with a limit value of 1.
     \end{itemize}
     \end{frame}
 
@@ -172,13 +169,10 @@
          \item Complete? \pause No. \pause Simulated annealing uses a probabilistic model. To reach completeness, theoretically,  cooling should be infinitely slow.
          \pause
          \item Time? \pause 
-         \begin{math}O(t)\end{math}
-         , where t is the cooling speed.
+         \begin{math}O(t)\end{math}, where t is the cooling speed.
          \pause
          \item Space? \pause
          \begin{math}O(1).\end{math}
-         \pause
-         \item Optimal? \pause No.
      \end{itemize}   
     \end{frame}
 
@@ -188,7 +182,7 @@
             \item Genetic search algorithms are built on the theory of natural selection: in each generation, the best individual are selected for reproduction.
             \pause
             \begin{itemize}
-                \item In each generations, individuals reproduce with a probability that depends on their fitness value.
+                \item In each generation, individuals reproduce with a probability that depends on their fitness value.
             \end{itemize}
             \pause
             \item The recombination procedure occurs by randomly selecting a crossover point, at which the parents are divided to form their children.
@@ -206,9 +200,9 @@
          \begin{math}O(km)\end{math}, where k is the maximum number of iterations and m is the population size.
          \pause
          \item Space? \pause
-         \begin{math}O(m).\end{math}
+         \begin{math}O(m).\end{math} 
          \pause
-         \item Optimal? \pause No.
+         The current population is stored.
      \end{itemize}   
     \end{frame}
 \end{document}
